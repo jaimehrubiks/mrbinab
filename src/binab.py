@@ -1,7 +1,7 @@
 import asyncio
 import threading
 import telepot
-
+import gettext
 from telepot.delegate import per_chat_id
 from telepot.async.delegate import create_open
 
@@ -18,11 +18,11 @@ CONTRIBUTORS:
 LICENSE:        BPL V3 in file "LICENSE"
 """
 
-# Configuration
+# Config
 TIMEOUT_SECONDS = 200
-
-MAX_STATUS = 3              # Min: 3 (Avoid initial conversation)
-# End configuration
+LANGUAJE = "es"             # Choices: (def -debugMode-, es)
+MAX_STATUS = 3              # Min value: 3 (To avoid initial conversation)
+# End config
 
 
 class User(telepot.helper.ChatHandler):
@@ -34,12 +34,12 @@ class User(telepot.helper.ChatHandler):
 
     @asyncio.coroutine
     def open(self, initial_msg, seed):
-        yield from self.sender.sendMessage('boot_message')
+        yield from self.sender.sendMessage(_('boot_message'))
         return False  # prevent on_message() from being called on the initial message
 
     @asyncio.coroutine
     def disconnect(self):
-        yield from self.sender.sendMessage(u"forced_disconnect")
+        yield from self.sender.sendMessage(_('forced_disconnect'))
         self._status = 0
         return
 
@@ -47,7 +47,7 @@ class User(telepot.helper.ChatHandler):
     def start_peer(self, peerid):
         self._peerid = peerid
         self._status = 4
-        yield from self.sender.sendMessage(u"connected_a2")
+        yield from self.sender.sendMessage(_('connected_a2'))
 
     @asyncio.coroutine
     def send_message(self, message):
@@ -71,14 +71,14 @@ class User(telepot.helper.ChatHandler):
                 if message == '/init':
                     self._peerid = in_out_queue(self._id)
                     if self._peerid == 0:
-                        yield from self.sender.sendMessage('connected_a1')
+                        yield from self.sender.sendMessage(_('connected_a1'))
                         self._status += 1
                     else:
                         self._status += 2
-                        yield from self.sender.sendMessage('connected_b')
+                        yield from self.sender.sendMessage(_('connected_b1'))
                         yield from user_list.get(self._peerid).start_peer(self._id)
                 else:
-                    yield from self.send_message('instructions')
+                    yield from self.send_message(_('instructions'))
             return
 
         if message == "/end":
@@ -94,7 +94,7 @@ class User(telepot.helper.ChatHandler):
     @asyncio.coroutine
     def on_close(self, exception):
         if isinstance(exception, telepot.helper.WaitTooLong):
-            yield from self.sender.send_message("Game expired - timeout.")
+            yield from self.sender.send_message(_('timeout'))
             del user_list[self._id]
 
 
@@ -121,6 +121,9 @@ bot = telepot.async.DelegatorBot(TOKEN, [
 ])
 loop = asyncio.get_event_loop()
 loop.create_task(bot.messageLoop())
+
+es = gettext.translation('binab', localedir='../locale', languages=[LANGUAJE])
+es.install()
 
 # Program Start
 print('Server up and running')

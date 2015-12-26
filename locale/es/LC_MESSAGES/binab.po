@@ -1,0 +1,52 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-12-26 21:33+0100\n"
+"PO-Revision-Date: 2015-12-26 22:03+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_US\n"
+
+#: src\binab.py:37
+msgid "boot_message"
+msgstr ""
+"Bienvenido a Mr. Binab [Beta 1.0]\n"
+"Un bot creado con inteligencia artificial que pretende ser un humano.\n"
+"Antes de seguir debe saber que su conversación puede ser registrada para el aprendizaje de Mr. Binab\n"
+"Utilice /init para iniciar"
+
+#: src\binab.py:42
+msgid "forced_disconnect"
+msgstr "La conexión ha finalizado. Hable de  nuevo para reiniciar la comunicación."
+
+#: src\binab.py:50
+msgid "connected_a2"
+msgstr "Hola! Soy el bot Mr. bINAB, pero en realidad quiero que sepas que soy un ser humano, es más te voy a demostrar que soy un ser humano:"
+
+#: src\binab.py:74
+msgid "connected_a1"
+msgstr "Por favor, espere a que se liberen los recursos para iniciar una comunicación."
+
+#: src\binab.py:78
+msgid "connected_b1"
+msgstr "Hola! Soy el bot Mr. bINAB, pero en realidad quiero que sepas que soy un ser humano, es más,  quiero que tú me demuestres a mí que no eres un robot, adelante."
+
+#: src\binab.py:81
+msgid "instructions"
+msgstr ""
+"Escriba /init para iniciar la comunicación.\n"
+"Escriba /end para terminar la comunicación"
+
+#: src\binab.py:97
+msgid "timeout"
+msgstr "Tiempo de espera agotado. Ha estado demasiado tiempo sin hablar con el bot y se han liberado los recursos. Vuelva a hablar para volver a empezar."
