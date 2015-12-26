@@ -37,15 +37,13 @@ class User(telepot.helper.ChatHandler):
     @asyncio.coroutine
     def open(self, initial_msg, seed):
         yield from self.sender.sendMessage('Bienvenido. Mr. bINAB Beta 1')
-        yield from self.sender.sendMessage('Me haré pasar por un ser humano.')
-        yield from self.sender.sendMessage('Utilice /init')
         return True  # prevent on_message() from being called on the initial message
 
     @asyncio.coroutine
     def disconnect(self, remote):
-        yield from self.sender.sendMessage(u"Communication is over")
+        yield from self.sender.sendMessage(u"Forced disconnect")
         if remote:
-            yield from playerList.get(self._peerid).disconnect(False)
+            yield from user_list.get(self._peerid).disconnect(False)
         raise telepot.helper.WaitTooLong
 
     @asyncio.coroutine
@@ -71,18 +69,22 @@ class User(telepot.helper.ChatHandler):
         if not self._connected:
 
             if self._id is None: self._id = msg['from']['id']
-            if self._id not in playerList: playerList[self._id] = self
+            if self._id not in user_list: user_list[self._id] = self
 
             if message == "/init":
                 self._peerid = in_out_queue(self._id)
                 if self._peerid == 0:
                     print('Primer equipo')
-                    yield from self.sender.sendMessage(u"Por favor. Espere mientras se inicia la comunicación")
+                    yield from self.sender.sendMessage('Primer equipo, espera')
                 else:
                     print('Segundo equipo')
                     self._connected = True
-                    yield from self.sender.sendMessage( u"Hola. Mi nombre es Mr. bINAB y voy a demostrarte que no soy un bot.")
-                    yield from playerList.get(self._peerid).self.startPeer(self._id)
+                    yield from self.sender.sendMessage('Segundo equipo')
+                    try:
+                        yield from user_list.get(self._peerid).start_peer(self._id)
+                    except Exception as e:
+                        print('exception:')
+                        print(e)
                     # multiBot.sendMessage(self._peerid,"Listo. Escriba /Init para comenzar")
             else:
                 yield from self.sender.sendMessage(u"Utilice /init o espere")
@@ -90,19 +92,19 @@ class User(telepot.helper.ChatHandler):
 
         if message == "/end":
             # yield from self.sender.sendMessage(u"Trying to end")
-            yield from playerList.get(self._peerid).forceEnd2(True)
+            yield from user_list.get(self._peerid).disconnect(True)
             # yield from self.sender.close()
             # self.forceEnd()
 
-        yield from playerList.get(self._peerid).sendMessage(message)
+        yield from user_list.get(self._peerid).send_message(message)
         # yield from self.sender.sendMessage("Connected")
         return
 
     @asyncio.coroutine
     def on_close(self, exception):
         if isinstance(exception, telepot.helper.WaitTooLong):
-            yield from self.sender.sendMessage("Game expired - timeout.")
-            del playerList[self._id]
+            yield from self.sender.send_message("Game expired - timeout.")
+            del user_list[self._id]
 
 
 # Store your API key in a file named "token.txt" and insert it in .gitignore
@@ -120,7 +122,7 @@ loop.create_task(bot.messageLoop())
 # Init
 print('Server up and running')
 # nextPeer = 0
-playerList = {}
+user_list = {}
 nextpeer = 0
 nextpeer_lock = threading.Lock()
 
