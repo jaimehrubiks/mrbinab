@@ -36,12 +36,12 @@ class User(telepot.helper.ChatHandler):
 
     @asyncio.coroutine
     def open(self, initial_msg, seed):
-        yield from self.sender.sendMessage('Bienvenido. Mr. bINAB Beta 1')
+        yield from self.sender.sendMessage('boot_message')
         return True  # prevent on_message() from being called on the initial message
 
     @asyncio.coroutine
     def disconnect(self, remote):
-        yield from self.sender.sendMessage(u"Forced disconnect")
+        yield from self.sender.sendMessage(u"forced_disconnect")
         if remote:
             yield from user_list.get(self._peerid).disconnect(False)
         raise telepot.helper.WaitTooLong
@@ -50,7 +50,7 @@ class User(telepot.helper.ChatHandler):
     def start_peer(self, peerid):
         self._peerid = peerid
         self._connected = True
-        yield from self.sender.sendMessage(u"Conectado")
+        yield from self.sender.sendMessage(u"connected_a2")
 
     @asyncio.coroutine
     def send_message(self, message):
@@ -61,11 +61,10 @@ class User(telepot.helper.ChatHandler):
         content_type, chat_type, chat_id = telepot.glance2(msg)
 
         if content_type != 'text':
-            # yield from self.sender.sendMessage('Give me a number, please.')
             return
 
         message = msg['text']
-        # yield from self.sender.sendMessage(mensaje)
+
         if not self._connected:
 
             if self._id is None: self._id = msg['from']['id']
@@ -74,30 +73,25 @@ class User(telepot.helper.ChatHandler):
             if message == "/init":
                 self._peerid = in_out_queue(self._id)
                 if self._peerid == 0:
-                    print('Primer equipo')
-                    yield from self.sender.sendMessage('Primer equipo, espera')
+                    yield from self.sender.sendMessage('connected_a1')
                 else:
-                    print('Segundo equipo')
                     self._connected = True
-                    yield from self.sender.sendMessage('Segundo equipo')
+                    yield from self.sender.sendMessage('connected_b')
                     try:
                         yield from user_list.get(self._peerid).start_peer(self._id)
                     except Exception as e:
-                        print('exception:')
                         print(e)
-                    # multiBot.sendMessage(self._peerid,"Listo. Escriba /Init para comenzar")
+
             else:
                 yield from self.sender.sendMessage(u"Utilice /init o espere")
             return
 
         if message == "/end":
-            # yield from self.sender.sendMessage(u"Trying to end")
             yield from user_list.get(self._peerid).disconnect(True)
-            # yield from self.sender.close()
-            # self.forceEnd()
 
+        # Connected. Message forwarder
         yield from user_list.get(self._peerid).send_message(message)
-        # yield from self.sender.sendMessage("Connected")
+        # Message forwarder end
         return
 
     @asyncio.coroutine
@@ -105,26 +99,6 @@ class User(telepot.helper.ChatHandler):
         if isinstance(exception, telepot.helper.WaitTooLong):
             yield from self.sender.send_message("Game expired - timeout.")
             del user_list[self._id]
-
-
-# Store your API key in a file named "token.txt" and insert it in .gitignore
-keyFile = open('token.txt', 'r')
-TOKEN = keyFile.readline()
-keyFile.close()
-
-# Delegator Bot class in asynchronous mode // SET TIMEOUT
-bot = telepot.async.DelegatorBot(TOKEN, [
-    (per_chat_id(), create_open(User, TIMEOUT_SECONDS)),
-])
-loop = asyncio.get_event_loop()
-loop.create_task(bot.messageLoop())
-
-# Init
-print('Server up and running')
-# nextPeer = 0
-user_list = {}
-nextpeer = 0
-nextpeer_lock = threading.Lock()
 
 
 def in_out_queue(id_temp):
@@ -138,4 +112,22 @@ def in_out_queue(id_temp):
             nextpeer = 0
     return temp
 
+
+# Store your API key in a file named "token.txt" (remember to .gitignore it)
+keyFile = open('token.txt', 'r')
+TOKEN = keyFile.readline()
+keyFile.close()
+
+# Delegator Bot class in asynchronous mode // SET TIMEOUT
+bot = telepot.async.DelegatorBot(TOKEN, [
+    (per_chat_id(), create_open(User, TIMEOUT_SECONDS)),
+])
+loop = asyncio.get_event_loop()
+loop.create_task(bot.messageLoop())
+
+# Program Start
+print('Server up and running')
+user_list = {}
+nextpeer = 0
+nextpeer_lock = threading.Lock()
 loop.run_forever()
