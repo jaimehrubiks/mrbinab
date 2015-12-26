@@ -1,3 +1,7 @@
+# Important Note:
+*Repository is still in initial developing phase. I won't accept commits until I finish basic functionality*
+
+
 # Mr. Binab
 Poof of concept for distributed human simulated Artificial Intelligence [DHSAI]. Mr. Binab is a human powered bot that aims to prove himself a human.
 
