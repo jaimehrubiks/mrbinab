@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+src/token.txt
+*.xml
+src/.idea/bINAB.iml
+src/.idea/.name
