@@ -1,0 +1,45 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2015-12-26 21:32+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: src\binab.py:37
+msgid "boot_message"
+msgstr ""
+
+#: src\binab.py:42
+msgid "forced_disconnect"
+msgstr ""
+
+#: src\binab.py:50
+msgid "connected_a2"
+msgstr ""
+
+#: src\binab.py:74
+msgid "connected_a1"
+msgstr ""
+
+#: src\binab.py:78
+msgid "connected_b1"
+msgstr ""
+
+#: src\binab.py:81
+msgid "instructions"
+msgstr ""
+
+#: src\binab.py:97
+msgid "timeout"
+msgstr ""
+
