@@ -40,11 +40,10 @@ class User(telepot.helper.ChatHandler):
         return True  # prevent on_message() from being called on the initial message
 
     @asyncio.coroutine
-    def disconnect(self, remote):
+    def disconnect(self):
         yield from self.sender.sendMessage(u"forced_disconnect")
-        if remote:
-            yield from user_list.get(self._peerid).disconnect(False)
-        raise telepot.helper.WaitTooLong
+        self._connected = False
+        return
 
     @asyncio.coroutine
     def start_peer(self, peerid):
@@ -77,17 +76,16 @@ class User(telepot.helper.ChatHandler):
                 else:
                     self._connected = True
                     yield from self.sender.sendMessage('connected_b')
-                    try:
-                        yield from user_list.get(self._peerid).start_peer(self._id)
-                    except Exception as e:
-                        print(e)
+                    yield from user_list.get(self._peerid).start_peer(self._id)
 
             else:
                 yield from self.sender.sendMessage(u"Utilice /init o espere")
             return
 
         if message == "/end":
-            yield from user_list.get(self._peerid).disconnect(True)
+            yield from user_list.get(self._peerid).disconnect()
+            yield from self.disconnect()
+            return
 
         # Connected. Message forwarder
         yield from user_list.get(self._peerid).send_message(message)
