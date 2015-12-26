@@ -57,6 +57,5 @@ docs/_build/
 target/
 src/token.txt
 *.xml
-src/.idea
-.idea/mrbinab.iml
-*.name
+src/.idea/bINAB.iml
+src/.idea/.name

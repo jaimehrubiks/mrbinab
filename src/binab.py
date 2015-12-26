@@ -1,6 +1,4 @@
 import asyncio
-import threading
-
 import telepot
 import time
 from telepot.delegate import per_chat_id
@@ -21,13 +19,10 @@ LICENSE:        BPL V3 in file "LICENSE"
 
 # Configuration
 TIMEOUT_SECONDS = 200
-
-
 # End configuration
 
 
 class User(telepot.helper.ChatHandler):
-
     def __init__(self, seed_tuple, timeout):
         super(User, self).__init__(seed_tuple, timeout)
         self._connected = False
@@ -74,15 +69,16 @@ class User(telepot.helper.ChatHandler):
             if self._id not in playerList: playerList[self._id] = self
 
             if message == "/init":
-                self._peerid = in_out_queue(self._id)
-                if self._peerid == 0:
-                    print('Primer equipo')
+                global nextPeer
+                if nextPeer == 0:
                     yield from self.sender.sendMessage(u"Por favor. Espere mientras se inicia la comunicación")
+                    nextPeer = msg['from']['id']
                 else:
-                    print('Segundo equipo')
+                    self._peerid = nextPeer
+                    nextPeer = 0
                     self._connected = True
-                    yield from self.sender.sendMessage( u"Hola. Mi nombre es Mr. bINAB y voy a demostrarte que no soy un bot.")
-                    yield from playerList.get(self._peerid).self.startPeer(self._id)
+                    yield from self.sender.sendMessage(u"Hola. Mi nombre es Mr. bINAB y voy a demostrarte que no soy un bot.")
+                    yield from playerList.get(self._peerid).startPeer(self._id)
                     # multiBot.sendMessage(self._peerid,"Listo. Escriba /Init para comenzar")
             else:
                 yield from self.sender.sendMessage(u"Utilice /init o espere")
@@ -119,21 +115,7 @@ loop.create_task(bot.messageLoop())
 
 # Init
 print('Server up and running')
-# nextPeer = 0
+nextPeer = 0
 playerList = {}
-nextpeer = 0
-nextpeer_lock = threading.Lock()
-
-
-def in_out_queue(id_temp):
-    global nextpeer
-    with nextpeer_lock:
-        if nextpeer == 0:
-            nextpeer = id_temp
-            temp = 0
-        else:
-            temp = nextpeer
-            nextpeer = 0
-    return temp
 
 loop.run_forever()
