@@ -1,9 +1,11 @@
 import asyncio
 import threading
+import os
 import telepot
-import gettext
+import telepot.async
 from telepot.delegate import per_chat_id
 from telepot.async.delegate import create_open
+import gettext
 
 """
 NAME:           Mr. bINAB telegram bot
@@ -87,6 +89,7 @@ class User(telepot.helper.ChatHandler):
             return
 
         # Connected. Message forwarder
+        print(message)
         yield from user_list.get(self._peerid).send_message(message)
         # Message forwarder end
         return
@@ -111,9 +114,11 @@ def in_out_queue(id_temp):
 
 
 # Store your API key in a file named "token.txt" (remember to .gitignore it)
-keyFile = open('token.txt', 'r')
-TOKEN = keyFile.readline()
-keyFile.close()
+script_dir = os.path.dirname(os.path.realpath('__file__'))
+key_dir = os.path.join(script_dir, '../token.txt')
+key_file = open('token.txt', 'r')
+TOKEN = key_file.readline().strip()
+key_file.close()
 
 # Delegator Bot class in asynchronous mode // SET TIMEOUT
 bot = telepot.async.DelegatorBot(TOKEN, [
