@@ -114,7 +114,7 @@ def in_out_queue(id_temp):
 
 
 # Store your API key in a file named "token.txt" (remember to .gitignore it)
-script_dir = os.path.dirname(os.path.realpath('__file__'))
+script_dir = os.path.dirname(os.path.realpath(__file__))
 key_dir = os.path.join(script_dir, '../token.txt')
 key_file = open('token.txt', 'r')
 TOKEN = key_file.readline().strip()
@@ -127,7 +127,9 @@ bot = telepot.async.DelegatorBot(TOKEN, [
 loop = asyncio.get_event_loop()
 loop.create_task(bot.messageLoop())
 
-es = gettext.translation('binab', localedir='../locale', languages=[LANGUAJE])
+# Translation
+locale_dir = os.path.join(script_dir, '../locale')
+es = gettext.translation('binab', localedir=locale_dir, languages=[LANGUAJE])
 es.install()
 
 # Program Start
@@ -136,3 +138,4 @@ user_list = {}
 nextpeer = 0
 nextpeer_lock = threading.Lock()
 loop.run_forever()
+
